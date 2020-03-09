@@ -65,12 +65,12 @@
 
                 <!-- User Profile Picture -->
                 <d-col lg="4">
-                  <label for="userProfilePicture" class="text-center w-100 mb-4">Image</label>
+                  <label class="text-center w-100 mb-4">Image</label>
                   <div class="edit-user-details__avatar m-auto">
-                    <img src="@/assets/images/uploads/undefined.png" alt="User Avatar">
+                    <img class="img-responsive" v-if="input.image" :src="getImage(input.image)" >
                     <label class="edit-user-details__avatar__change">
                                 <i class="material-icons mr-1">&#xE439;</i>
-                                <d-input type="file" id="userProfilePicture" class="d-none" />
+                                <input @change="onFileChange" type="file" name="image" class="form-control" />
                               </label>
                   </div>
                   <d-button size="sm" class="btn-white d-table mx-auto mt-4"><i class="material-icons">&#xE2C3;</i> Upload Image</d-button>
@@ -80,7 +80,7 @@
           </d-card-body>
           <!-- Save Changes -->
           <d-card-footer class="border-top">
-            <d-button size="sm" @click="addLoyalty" class="btn-accent ml-auto d-table mr-3">
+            <d-button size="sm" @click="postImage($route.params.id)" class="btn-accent ml-auto d-table mr-3">
               Submit
             </d-button>
           </d-card-footer>
@@ -104,6 +104,8 @@ export default {
       vendorOptions: vendor,
       audienceOptions: audience,
       actionOptions: action,
+      campaign_type: "",
+      campaign_name: "",
       input: {
         name: "",
         vendor: "",
@@ -114,18 +116,40 @@ export default {
         action: "",
         action_link: "",
         image: ""
-      },
+      }
     };
   },
 
   created: function()
   {
-    
+    this.campaign_type = this.$route.name.split("edit-")[1];
+    this.getOneCampaign();
   },
 
   methods: {
-    addLoyalty() {
+    getOneCampaign() {
+      var id = this.$route.params.id;
+      this.axios.get(address + ":3000/get-one-" + this.campaign_type, {params: {id: id}, headers: headers.headers}).then((response) => {
+        this.input.name = response.data[0].name;
+        this.input.vendor = response.data[0].vendor;
+        this.input.start_date = response.data[0].start_date;
+        this.input.end_date = response.data[0].end_date;
+        this.input.audience = response.data[0].audience;
+        this.input.description = response.data[0].description;
+        this.input.action = response.data[0].action;
+        this.input.action_link = response.data[0].action_link;
+        this.input.image = response.data[0].image;
+      });
+    },
+    getImage(image) {
+      return address + ':3000/images/' + image;
+    },
+    onFileChange(event) {
+      this.temp_image = event.target.files[0];
+    },
+    editCampaign() {
       let postObj = {
+        id: this.$route.params.id,
         name: this.input.name,
         vendor: this.input.vendor,
         start_date: this.input.start_date,
@@ -136,13 +160,29 @@ export default {
         action_link: this.input.action_link,
         image: this.input.image,
       };
-      this.axios.post(address + ':3000/add-loyalty', postObj, headers)
+      this.axios.post(address + ':3000/edit-' + this.campaign_type, postObj, headers)
       .then((response) => {
         if(response.status == 200) {
-          this.$router.push('/loyalty');
+          this.$router.push('/' + this.campaign_type);
         }
       });
-    }
+    },
+    postImage(id) {
+      let formData = new FormData();
+      if(this.temp_image.length != 0) {
+        formData.append('image', this.temp_image, 'campaign_' + this.campaign_type + "_" + id);
+      }
+      this.axios.post(address + ':3000/post-image', formData, headers)
+      .then((response) => {
+        if(response.data != 404) {
+          this.temp_image = response.data.originalname + '.png';
+        }
+        else {
+          alert("No picture uploaded");
+        }
+        this.editCampaign();
+      });
+    },
   }
 };
 </script>

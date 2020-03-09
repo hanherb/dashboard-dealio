@@ -51,7 +51,7 @@
                       </textarea>
                     </d-col>
 
-                     <d-col md="6" class="form-group">
+                    <d-col md="6" class="form-group">
                       <label>Action</label>
                       <d-form-select v-model="input.action" :options="actionOptions" />
                     </d-col>
@@ -65,12 +65,12 @@
 
                 <!-- User Profile Picture -->
                 <d-col lg="4">
-                  <label for="userProfilePicture" class="text-center w-100 mb-4">Image</label>
+                  <label class="text-center w-100 mb-4">Image</label>
                   <div class="edit-user-details__avatar m-auto">
-                    <img src="@/assets/images/uploads/undefined.png" alt="User Avatar">
+                    <img class="img-responsive" :src="getImage(image)" >
                     <label class="edit-user-details__avatar__change">
                                 <i class="material-icons mr-1">&#xE439;</i>
-                                <d-input type="file" id="userProfilePicture" class="d-none" />
+                                <input @change="onFileChange" type="file" name="image" class="form-control" />
                               </label>
                   </div>
                   <d-button size="sm" class="btn-white d-table mx-auto mt-4"><i class="material-icons">&#xE2C3;</i> Upload Image</d-button>
@@ -80,7 +80,7 @@
           </d-card-body>
           <!-- Save Changes -->
           <d-card-footer class="border-top">
-            <d-button size="sm" @click="addDealOfTheWeek" class="btn-accent ml-auto d-table mr-3">
+            <d-button size="sm" @click="addCampaign" class="btn-accent ml-auto d-table mr-3">
               Submit
             </d-button>
           </d-card-footer>
@@ -104,6 +104,8 @@ export default {
       vendorOptions: vendor,
       audienceOptions: audience,
       actionOptions: action,
+      campaign_type: "",
+      campaign_name: "",
       input: {
         name: "",
         vendor: "",
@@ -114,17 +116,17 @@ export default {
         action: "",
         action_link: "",
         image: ""
-      },
+      }
     };
   },
 
   created: function()
   {
-    
+    this.campaign_type = this.$route.name.split("add-")[1];
   },
 
   methods: {
-    addDealOfTheWeek() {
+    addCampaign() {
       let postObj = {
         name: this.input.name,
         vendor: this.input.vendor,
@@ -133,16 +135,55 @@ export default {
         audience: this.input.audience,
         description: this.input.description,
         action: this.input.action,
-        action_link: this.input.action_link,
-        image: this.input.image,
+        action_link: this.input.action_link
       };
-      this.axios.post(address + ':3000/add-deal-of-the-week', postObj, headers)
+      this.axios.post(address + ':3000/add-' + this.campaign_type, postObj, headers)
       .then((response) => {
         if(response.status == 200) {
-          this.$router.push('/deal-of-the-week');
+          this.postImage(response.data.insertId);
         }
       });
-    }
+    },
+    getImage(image) {
+       return address + ':3000/images/undefined.png';
+    },
+    onFileChange(event) {
+      this.temp_image = event.target.files[0];
+    },
+    postImage(id) {
+      let formData = new FormData();
+      if(this.temp_image.length != 0) {
+        formData.append('image', this.temp_image, 'campaign_' + this.campaign_type + "_" + id);
+      }
+      this.axios.post(address + ':3000/post-image', formData, headers)
+      .then((response) => {
+        if(response.data != 404) {
+          this.temp_image = response.data.originalname + '.png';
+          let postObj = {
+            id: id,
+            name: this.input.name,
+            vendor: this.input.vendor,
+            start_date: this.input.start_date,
+            end_date: this.input.end_date,
+            audience: this.input.audience,
+            description: this.input.description,
+            action: this.input.action,
+            action_link: this.input.action_link,
+            image: this.temp_image
+          };
+          this.axios.post(address + ':3000/edit-' + this.campaign_type, postObj, headers)
+          .then((response) => {
+            if(response.status == 200) {
+              console.log(response);
+            }
+          });
+        }
+        else {
+          alert("No picture uploaded");
+        }
+        this.$router.push('/' + this.campaign_type);
+      });
+    },
   }
 };
 </script>

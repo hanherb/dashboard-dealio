@@ -1,16 +1,16 @@
-<template>
+z<template>
   <d-container fluid class="main-content-container px-4 pb-4">
     <!-- Page Header -->
     <d-row no-gutters class="page-header py-4">
       <!-- Page Header - Page Title -->
       <d-col col sm="4" class="text-center text-sm-left mb-4 mb-sm-0">
         <span class="text-uppercase page-subtitle">Campaign</span>
-        <h3 class="page-title">Earn</h3>
+        <h3 class="page-title">{{campaign_name}}</h3>
       </d-col>
       <d-col col sm="8" class="text-center text-sm-right mb-4 mb-sm-0">
-        <d-link to="/add-earn">
+        <d-link :to="'/add-' + campaign_type">
           <d-button class="btn-blue" v-d-tooltip.hover="'Edit'">
-            Add Earn
+            Add {{campaign_name}}
           </d-button>
         </d-link>
       </d-col>
@@ -27,7 +27,7 @@
       }">
       <template slot="table-row" slot-scope="props">
         <span v-if="props.column.field == 'update'">
-          <d-link :to="'/edit-earn/' + props.row.id">
+          <d-link :to="'/edit-' + campaign_type + '/' + props.row.id">
             <d-button class="btn-white" v-d-tooltip.hover="'Edit'">
               <i class="material-icons">&#xE254;</i>
             </d-button>
@@ -46,6 +46,7 @@ import headers from '@/headers';
 export default {
   data() {
     return {
+      campaign_type: "",
       columns: [
         {
           label: 'ID',
@@ -79,12 +80,14 @@ export default {
 
   created: function()
   {
-    this.fetchEarn();
+    this.campaign_type = this.$route.name;
+    this.campaign_name = this.campaign_type.charAt(0).toUpperCase() + this.campaign_type.slice(1);
+    this.fetchCampaign();
   },
 
   methods: {
-    fetchEarn() {
-      this.axios.get(address + ":3000/get-earn", headers).then((response) => {
+    fetchCampaign() {
+      this.axios.get(address + ":3000/get-" + this.campaign_type, headers).then((response) => {
         this.rows = response.data;
       });
     }
