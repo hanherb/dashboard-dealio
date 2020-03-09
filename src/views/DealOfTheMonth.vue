@@ -26,7 +26,7 @@
           enabled: true
       }">
       <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'action'">
+        <span v-if="props.column.field == 'update'">
           <d-link :to="'/edit-deal-of-the-month/' + props.row.id">
             <d-button class="btn-white" v-d-tooltip.hover="'Edit'">
               <i class="material-icons">&#xE254;</i>
@@ -68,8 +68,8 @@ export default {
           field: 'end_date',
         },
         {
-          label: 'Action',
-          field: 'action',
+          label: '',
+          field: 'update',
           tdClass: 'text-center'
         },
       ],

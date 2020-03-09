@@ -1,4 +1,4 @@
-<template>
+z<template>
   <d-container fluid class="main-content-container px-4 pb-4">
     <!-- Page Header -->
     <d-row no-gutters class="page-header py-4">
@@ -26,7 +26,7 @@
           enabled: true
       }">
       <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'action'">
+        <span v-if="props.column.field == 'update'">
           <d-link :to="'/edit-deals/' + props.row.id">
             <d-button class="btn-white" v-d-tooltip.hover="'Edit'">
               <i class="material-icons">&#xE254;</i>
@@ -68,8 +68,8 @@ export default {
           field: 'end_date',
         },
         {
-          label: 'Action',
-          field: 'action',
+          label: '',
+          field: 'update',
           tdClass: 'text-center'
         },
       ],

@@ -50,6 +50,16 @@
                         rows="6" wrap="soft" class="form-control form-control-lg">
                       </textarea>
                     </d-col>
+
+                    <d-col md="6" class="form-group">
+                      <label>Action</label>
+                      <d-form-select v-model="input.action" :options="actionOptions" />
+                    </d-col>
+
+                    <d-col md="6" class="form-group">
+                      <label>Action Link</label>
+                      <d-input type="text" v-model="input.action_link" />
+                    </d-col>
                   </d-form-row>
                 </d-col>
 
@@ -84,34 +94,16 @@
 <script>
 import address from '@/address';
 import headers from '@/headers';
+import vendor from '@/data/vendor.json';
+import audience from '@/data/audience.json';
+import action from '@/data/action.json';
 
 export default {
   data() {
     return {
-      vendorOptions: [
-        "A & W",
-        "Ace Hardware",
-        "Alfamart",
-        "Alfamidi",
-        "Bakmi GM",
-        "Blibli",
-        "Burger King",
-        "CGV",
-        "Cinema XXI",
-        "Dunkin Donuts",
-        "Hypermart"
-      ],
-      audienceOptions: [
-        "Full Audience Group",
-        "Full Audience Smoker",
-        "Female Full Audience",
-        "Jakarta Smoker Audience",
-        "Jawa Timur Full Audience",
-        "DI Yogyakarta Audience",
-        "Jawa Barat Full Audience",
-        "DKI Jakarta Full Audience",
-        "Bali Full Audience",
-      ],
+      vendorOptions: vendor,
+      audienceOptions: audience,
+      actionOptions: action,
       input: {
         name: "",
         vendor: "",
@@ -119,6 +111,8 @@ export default {
         end_date: "",
         audience: "",
         description: "",
+        action: "",
+        action_link: "",
         image: ""
       },
     };
@@ -138,6 +132,8 @@ export default {
         end_date: this.input.end_date,
         audience: this.input.audience,
         description: this.input.description,
+        action: this.input.action,
+        action_link: this.input.action_link,
         image: this.input.image,
       };
       this.axios.post(address + ':3000/add-deal-of-the-month', postObj, headers)

@@ -43,7 +43,7 @@ export default {
        */
     copyright: {
       type: String,
-      default: 'Copyright © 2020',
+      default: 'Copyright © 2020 Dealio',
     },
     /**
        * Whether the footer should be wrapped in a container, or not.

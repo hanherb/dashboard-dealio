@@ -40,8 +40,12 @@ Vue.use(VueAnalytics, {
   router
 });
 
+var options = {
+	persist: true
+};
+
 Vue.use(VueAxios, axios);
-Vue.use(VueSession);
+Vue.use(VueSession, options);
 Vue.use(VueGoodTablePlugin);
 
 router.beforeEach((to, from, next) => {
