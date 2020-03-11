@@ -72,26 +72,34 @@ export default {
   methods: {
     login() {
       if(this.input.username != "" && this.input.password != "") {
-        this.axios.post(address + ':3000/login-admin', {
-          username: this.input.username, 
-          password: this.input.password
-        })
-        .then((response) => {
-          if(response.data.token) {
-            this.$session.start();
-            this.$session.set('user', response.data.response);
-            document.cookie = "token=" + response.data.token;
-            document.cookie = "user_session=" + this.$session.get('user').id;
-            localStorage.setItem('user_session', this.$session.get('user'));
-            this.$router.push('/');
-          }
-          else {
-            alert("Incorrect combination of username and password");
-          }
-        });
+        if(!this.input.username.includes('"') && !this.input.password.includes('"') &&
+          !this.input.username.includes("'") && !this.input.password.includes("'") &&
+          !this.input.username.includes('/') && !this.input.password.includes('/') &&
+          !this.input.username.includes('\\') && !this.input.password.includes('\\')) {
+          this.axios.post(address + ':3000/login-admin', {
+            username: this.input.username,
+            password: this.input.password
+          })
+          .then((response) => {
+            if(response.data.token) {
+              this.$session.start();
+              this.$session.set('user', response.data.response);
+              document.cookie = "token=" + response.data.token;
+              document.cookie = "user_session=" + this.$session.get('user').id;
+              localStorage.setItem('user_session', this.$session.get('user'));
+              this.$router.push('/');
+            }
+            else {
+              alert("Incorrect combination of username and password");
+            }
+          });
+        }
+        else {
+          alert("Do not use special character in login form");
+        }
       }
       else {
-        alert("username and password cannot be empty");
+        alert("Username and password cannot be empty");
       }
     }
   }

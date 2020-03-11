@@ -16,7 +16,7 @@
 
                     <d-col md="6" class="form-group">
                       <label>Vendor</label>
-                      <d-form-select v-model="input.vendor" :options="vendorOptions" />
+                      <d-form-select v-model="input.vendor" :options="merchant" />
                     </d-col>
 
                     <d-col md="6" class="form-group">
@@ -106,6 +106,7 @@ export default {
       actionOptions: action,
       campaign_type: "",
       campaign_name: "",
+      merchant: [],
       input: {
         name: "",
         vendor: "",
@@ -123,9 +124,17 @@ export default {
   created: function()
   {
     this.campaign_type = this.$route.name.split("add-")[1];
+    this.fetchMerchant();
   },
 
   methods: {
+    fetchMerchant() {
+      this.axios.get(address + ":3000/get-merchant", headers).then((response) => {
+        for(var i = 0; i < response.data.length; i++) {
+          this.merchant.push(response.data[i].name);
+        }
+      });
+    },
     addCampaign() {
       let postObj = {
         name: this.input.name,

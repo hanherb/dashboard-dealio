@@ -43,6 +43,21 @@ export default new Router({
       component: Analytics,
     },
     {
+      path: '/merchant',
+      name: 'merchant',
+      component: () => import('./views/Merchant.vue'),
+    },
+    {
+      path: '/add-merchant',
+      name: 'add-merchant',
+      component: () => import('./views/AddMerchant.vue'),
+    },
+    {
+      path: '/edit-merchant/:id',
+      name: 'edit-merchant',
+      component: () => import('./views/EditMerchant.vue'),
+    },
+    {
       path: '/deals',
       name: 'deals',
       component: () => import('./views/Campaign.vue'),
@@ -73,48 +88,18 @@ export default new Router({
       component: () => import('./views/EditCampaign.vue'),
     },
     {
-      path: '/loyalty',
-      name: 'loyalty',
+      path: '/win',
+      name: 'win',
       component: () => import('./views/Campaign.vue'),
     },
     {
-      path: '/add-loyalty',
-      name: 'add-loyalty',
+      path: '/add-win',
+      name: 'add-win',
       component: () => import('./views/AddCampaign.vue'),
     },
     {
-      path: '/edit-loyalty/:id',
-      name: 'edit-loyalty',
-      component: () => import('./views/EditCampaign.vue'),
-    },
-    {
-      path: '/deal-of-the-month',
-      name: 'deal-of-the-month',
-      component: () => import('./views/Campaign.vue'),
-    },
-    {
-      path: '/add-deal-of-the-month',
-      name: 'add-deal-of-the-month',
-      component: () => import('./views/AddCampaign.vue'),
-    },
-    {
-      path: '/edit-deal-of-the-month/:id',
-      name: 'edit-deal-of-the-month',
-      component: () => import('./views/EditCampaign.vue'),
-    },
-    {
-      path: '/deal-of-the-week',
-      name: 'deal-of-the-week',
-      component: () => import('./views/Campaign.vue'),
-    },
-    {
-      path: '/add-deal-of-the-week',
-      name: 'add-deal-of-the-week',
-      component: () => import('./views/AddCampaign.vue'),
-    },
-    {
-      path: '/edit-deal-of-the-week/:id',
-      name: 'edit-deal-of-the-week',
+      path: '/edit-win/:id',
+      name: 'edit-win',
       component: () => import('./views/EditCampaign.vue'),
     },
     {

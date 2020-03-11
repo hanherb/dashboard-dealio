@@ -16,7 +16,7 @@
 
                     <d-col md="6" class="form-group">
                       <label>Vendor</label>
-                      <d-form-select v-model="input.vendor" :options="vendorOptions" />
+                      <d-form-select v-model="input.vendor" :options="merchant" />
                     </d-col>
 
                     <d-col md="6" class="form-group">
@@ -101,11 +101,11 @@ import action from '@/data/action.json';
 export default {
   data() {
     return {
-      vendorOptions: vendor,
       audienceOptions: audience,
       actionOptions: action,
       campaign_type: "",
       campaign_name: "",
+      merchant: [],
       input: {
         name: "",
         vendor: "",
@@ -124,6 +124,7 @@ export default {
   {
     this.campaign_type = this.$route.name.split("edit-")[1];
     this.getOneCampaign();
+    this.fetchMerchant();
   },
 
   methods: {
@@ -139,6 +140,13 @@ export default {
         this.input.action = response.data[0].action;
         this.input.action_link = response.data[0].action_link;
         this.input.image = response.data[0].image;
+      });
+    },
+    fetchMerchant() {
+      this.axios.get(address + ":3000/get-merchant", headers).then((response) => {
+        for(var i = 0; i < response.data.length; i++) {
+          this.merchant.push(response.data[i].name);
+        }
       });
     },
     getImage(image) {

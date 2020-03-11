@@ -72,20 +72,28 @@ export default {
   methods: {
     register() {
       if(this.input.username != "" && this.input.password != "" && this.input.confirm_password != "") {
-        if(this.input.password == this.input.confirm_password) {
-          let postObj = {
-            username: this.input.username,
-            password: this.input.password
-          };
-          this.axios.post(address + ':3000/register-admin', postObj)
-          .then((response) => {
-            if(response.status == 200) {
-              this.$router.push('/login');
-            }
-          });
+        if(!this.input.username.includes('"') && !this.input.password.includes('"') &&
+          !this.input.username.includes("'") && !this.input.password.includes("'") &&
+          !this.input.username.includes('/') && !this.input.password.includes('/') &&
+          !this.input.username.includes('\\') && !this.input.password.includes('\\')) {
+          if(this.input.password == this.input.confirm_password) {
+            let postObj = {
+              username: this.input.username,
+              password: this.input.password
+            };
+            this.axios.post(address + ':3000/register-admin', postObj)
+            .then((response) => {
+              if(response.status == 200) {
+                this.$router.push('/login');
+              }
+            });
+          }
+          else {
+            alert("Password didn't match");
+          }
         }
         else {
-          alert("Password didn't match");
+          alert("Do not use special character in registration form");
         }
       }
       else {
