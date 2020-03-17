@@ -16,7 +16,11 @@
 
                     <d-col md="6" class="form-group">
                       <label>Vendor</label>
-                      <d-form-select v-model="input.vendor" :options="merchant" />
+                      <d-form-select v-model="input.merchant_id">
+                        <option v-for="m in merchant" :value="m.id">
+                          {{m.name}}
+                        </option>
+                      </d-form-select>
                     </d-col>
 
                     <d-col md="6" class="form-group">
@@ -94,7 +98,6 @@
 <script>
 import address from '@/address';
 import headers from '@/headers';
-import vendor from '@/data/vendor.json';
 import audience from '@/data/audience.json';
 import action from '@/data/action.json';
 
@@ -105,10 +108,11 @@ export default {
       actionOptions: action,
       campaign_type: "",
       campaign_name: "",
+      temp_image: "",
       merchant: [],
       input: {
         name: "",
-        vendor: "",
+        merchant_id: "",
         start_date: "",
         end_date: "",
         audience: "",
@@ -132,7 +136,7 @@ export default {
       var id = this.$route.params.id;
       this.axios.get(address + ":3000/get-one-" + this.campaign_type, {params: {id: id}, headers: headers.headers}).then((response) => {
         this.input.name = response.data[0].name;
-        this.input.vendor = response.data[0].vendor;
+        this.input.merchant_id = response.data[0].merchant_id;
         this.input.start_date = response.data[0].start_date;
         this.input.end_date = response.data[0].end_date;
         this.input.audience = response.data[0].audience;
@@ -145,7 +149,7 @@ export default {
     fetchMerchant() {
       this.axios.get(address + ":3000/get-merchant", headers).then((response) => {
         for(var i = 0; i < response.data.length; i++) {
-          this.merchant.push(response.data[i].name);
+          this.merchant.push(response.data[i]);
         }
       });
     },
@@ -159,7 +163,7 @@ export default {
       let postObj = {
         id: this.$route.params.id,
         name: this.input.name,
-        vendor: this.input.vendor,
+        merchant_id: this.input.merchant_id,
         start_date: this.input.start_date,
         end_date: this.input.end_date,
         audience: this.input.audience,

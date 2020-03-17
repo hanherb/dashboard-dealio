@@ -103,6 +103,21 @@ export default new Router({
       component: () => import('./views/EditCampaign.vue'),
     },
     {
+      path: '/product-deals',
+      name: 'product-deals',
+      component: () => import('./views/ProductDeals.vue'),
+    },
+    {
+      path: '/add-product-deals',
+      name: 'add-product-deals',
+      component: () => import('./views/AddProductDeals.vue'),
+    },
+    {
+      path: '/edit-product-deals/:id',
+      name: 'edit-product-deals',
+      component: () => import('./views/EditProductDeals.vue'),
+    },
+    {
       path: '/ecommerce',
       name: 'ecommerce',
       component: OnlineStore,

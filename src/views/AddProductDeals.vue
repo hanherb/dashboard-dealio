@@ -24,6 +24,16 @@
                     </d-col>
 
                     <d-col md="6" class="form-group">
+                      <label>Price</label>
+                      <d-input type="number" v-model="input.price" />
+                    </d-col>
+
+                    <d-col md="6" class="form-group">
+                      <label>Discount</label>
+                      <d-input type="number" v-model="input.discount" />
+                    </d-col>
+
+                    <d-col md="6" class="form-group">
                       <label>Start Date</label>
                       <d-datepicker
                         v-model="input.start_date"
@@ -54,16 +64,6 @@
                         rows="6" wrap="soft" class="form-control form-control-lg">
                       </textarea>
                     </d-col>
-
-                    <d-col md="6" class="form-group">
-                      <label>Action</label>
-                      <d-form-select v-model="input.action" :options="actionOptions" />
-                    </d-col>
-
-                    <d-col md="6" class="form-group">
-                      <label>Action Link</label>
-                      <d-input type="text" v-model="input.action_link" />
-                    </d-col>
                   </d-form-row>
                 </d-col>
 
@@ -84,7 +84,7 @@
           </d-card-body>
           <!-- Save Changes -->
           <d-card-footer class="border-top">
-            <d-button size="sm" @click="addCampaign" class="btn-accent ml-auto d-table mr-3">
+            <d-button size="sm" @click="addProductDeals" class="btn-accent ml-auto d-table mr-3">
               Submit
             </d-button>
           </d-card-footer>
@@ -99,15 +99,11 @@
 import address from '@/address';
 import headers from '@/headers';
 import audience from '@/data/audience.json';
-import action from '@/data/action.json';
 
 export default {
   data() {
     return {
       audienceOptions: audience,
-      actionOptions: action,
-      campaign_type: "",
-      campaign_name: "",
       temp_image: "",
       merchant: [],
       input: {
@@ -117,8 +113,8 @@ export default {
         end_date: "",
         audience: "",
         description: "",
-        action: "",
-        action_link: "",
+        price: "",
+        discount: "",
         image: ""
       }
     };
@@ -126,7 +122,6 @@ export default {
 
   created: function()
   {
-    this.campaign_type = this.$route.name.split("add-")[1];
     this.fetchMerchant();
   },
 
@@ -134,12 +129,11 @@ export default {
     fetchMerchant() {
       this.axios.get(address + ":3000/get-merchant", headers).then((response) => {
         for(var i = 0; i < response.data.length; i++) {
-          console.log(response.data)
           this.merchant.push(response.data[i]);
         }
       });
     },
-    addCampaign() {
+    addProductDeals() {
       let postObj = {
         name: this.input.name,
         merchant_id: this.input.merchant_id,
@@ -147,10 +141,10 @@ export default {
         end_date: this.input.end_date,
         audience: this.input.audience,
         description: this.input.description,
-        action: this.input.action,
-        action_link: this.input.action_link
+        price: this.input.price,
+        discount: this.input.discount,
       };
-      this.axios.post(address + ':3000/add-' + this.campaign_type, postObj, headers)
+      this.axios.post(address + ':3000/add-product-deals', postObj, headers)
       .then((response) => {
         if(response.status == 200) {
           this.postImage(response.data.insertId);
@@ -180,11 +174,11 @@ export default {
             end_date: this.input.end_date,
             audience: this.input.audience,
             description: this.input.description,
-            action: this.input.action,
-            action_link: this.input.action_link,
+            price: this.input.price,
+            discount: this.input.discount,
             image: this.temp_image
           };
-          this.axios.post(address + ':3000/edit-' + this.campaign_type, postObj, headers)
+          this.axios.post(address + ':3000/edit-product-deals', postObj, headers)
           .then((response) => {
             if(response.status == 200) {
               console.log(response);
@@ -194,7 +188,7 @@ export default {
         else {
           alert("No picture uploaded");
         }
-        this.$router.push('/' + this.campaign_type);
+        this.$router.push('/product-deals');
       });
     },
   }

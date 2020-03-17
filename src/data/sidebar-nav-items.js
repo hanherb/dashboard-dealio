@@ -32,6 +32,12 @@ export default function () {
       to: {
         name: 'win',
       },
+    }, {
+      title: 'Product Deals',
+      htmlBefore: '<i class="material-icons">&#xE889;</i>',
+      to: {
+        name: 'product-deals',
+      },
     }],
   }];
 }
