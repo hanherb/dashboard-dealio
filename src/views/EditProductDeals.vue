@@ -183,7 +183,7 @@ export default {
       this.axios.post(address + ':3000/post-image', formData, headers)
       .then((response) => {
         if(response.data != 404) {
-          this.temp_image = response.data.originalname + '.png';
+          this.input.image = response.data.originalname + '.png';
         }
         else {
           alert("No picture uploaded");

@@ -145,7 +145,6 @@ export default {
         this.input.action = response.data[0].action;
         this.input.action_link = response.data[0].action_link;
         this.input.image = response.data[0].image;
-        console.log(this.input.image)
       });
     },
     fetchMerchant() {
@@ -189,7 +188,7 @@ export default {
       this.axios.post(address + ':3000/post-image', formData, headers)
       .then((response) => {
         if(response.data != 404) {
-          this.temp_image = response.data.originalname + '.png';
+          this.input.image = response.data.originalname + '.png';
         }
         else {
           alert("No picture uploaded");
