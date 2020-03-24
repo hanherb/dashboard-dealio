@@ -71,7 +71,7 @@
                 <d-col lg="4">
                   <label class="text-center w-100 mb-4">Image</label>
                   <div class="edit-user-details__avatar m-auto">
-                    <img class="img-responsive" v-if="input.image" :src="getImage(input.image)" >
+                    <img class="img-responsive" v-if="input.image != 'undefined' && input.image" :src="getImage(input.image)" >
                     <img class="img-responsive" v-else :src="getImage('undefined.png')" >
                     <label class="edit-user-details__avatar__change">
                                 <i class="material-icons mr-1">&#xE439;</i>
@@ -145,6 +145,7 @@ export default {
         this.input.action = response.data[0].action;
         this.input.action_link = response.data[0].action_link;
         this.input.image = response.data[0].image;
+        console.log(this.input.image)
       });
     },
     fetchMerchant() {
@@ -155,7 +156,6 @@ export default {
       });
     },
     getImage(image) {
-      console.log(image)
       return address + ':3000/images/' + image;
     },
     onFileChange(event) {

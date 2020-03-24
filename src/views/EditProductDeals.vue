@@ -71,7 +71,7 @@
                 <d-col lg="4">
                   <label class="text-center w-100 mb-4">Image</label>
                   <div class="edit-user-details__avatar m-auto">
-                    <img class="img-responsive" v-if="input.image" :src="getImage(input.image)" >
+                    <img class="img-responsive" v-if="input.image != 'undefined' && input.image" :src="getImage(input.image)" >
                     <img class="img-responsive" v-else :src="getImage('undefined.png')" >
                     <label class="edit-user-details__avatar__change">
                                 <i class="material-icons mr-1">&#xE439;</i>
