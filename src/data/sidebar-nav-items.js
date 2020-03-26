@@ -7,7 +7,7 @@ export default function () {
       htmlBefore: '<i class="material-icons">&#xE917;</i>',
       htmlAfter: '',
     }, {
-      title: 'Merchant',
+      title: 'Vendor',
       to: '/merchant',
       htmlBefore: '<i class="material-icons">&#xE917;</i>',
       htmlAfter: '',
@@ -15,10 +15,16 @@ export default function () {
   }, {
     title: 'Campaign',
     items: [{
-      title: 'Deals',
+      title: 'Merchant Deals',
       htmlBefore: '<i class="material-icons">&#xE889;</i>',
       to: {
         name: 'deals',
+      },
+    }, {
+      title: 'E-Commerce Deals',
+      htmlBefore: '<i class="material-icons">&#xE889;</i>',
+      to: {
+        name: 'product-deals',
       },
     }, {
       title: 'Earn',
@@ -31,12 +37,6 @@ export default function () {
       htmlBefore: '<i class="material-icons">&#xE889;</i>',
       to: {
         name: 'win',
-      },
-    }, {
-      title: 'Product Deals',
-      htmlBefore: '<i class="material-icons">&#xE889;</i>',
-      to: {
-        name: 'product-deals',
       },
     }],
   }];

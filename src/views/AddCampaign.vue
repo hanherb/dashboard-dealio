@@ -14,13 +14,18 @@
                       <d-input type="text" id="name" v-model="input.name" />
                     </d-col>
 
-                    <d-col md="6" class="form-group">
+                    <d-col v-if="campaign_type != 'win'" md="6" class="form-group">
                       <label>Vendor</label>
                       <d-form-select v-model="input.merchant_id">
                         <option v-for="m in merchant" :value="m.id">
                           {{m.name}}
                         </option>
                       </d-form-select>
+                    </d-col>
+
+                    <d-col v-else md="6" class="form-group">
+                      <label>Point Redeem</label>
+                      <d-input type="number" id="point_redeem" v-model="input.point_redeem" />
                     </d-col>
 
                     <d-col md="6" class="form-group">
@@ -55,12 +60,12 @@
                       </textarea>
                     </d-col>
 
-                    <d-col md="6" class="form-group">
+                    <d-col v-if="campaign_type != 'win'" md="6" class="form-group">
                       <label>Action</label>
                       <d-form-select v-model="input.action" :options="actionOptions" />
                     </d-col>
 
-                    <d-col md="6" class="form-group">
+                    <d-col v-if="campaign_type != 'win'" md="6" class="form-group">
                       <label>Action Link</label>
                       <d-input type="text" v-model="input.action_link" />
                     </d-col>
@@ -112,13 +117,14 @@ export default {
       merchant: [],
       input: {
         name: "",
-        merchant_id: "",
+        merchant_id: 0,
         start_date: "",
         end_date: "",
         audience: "",
         description: "",
         action: "",
         action_link: "",
+        point_redeem: 0,
         image: ""
       }
     };
@@ -134,7 +140,6 @@ export default {
     fetchMerchant() {
       this.axios.get(address + ":3000/get-merchant", headers).then((response) => {
         for(var i = 0; i < response.data.length; i++) {
-          console.log(response.data)
           this.merchant.push(response.data[i]);
         }
       });
@@ -148,7 +153,8 @@ export default {
         audience: this.input.audience,
         description: this.input.description,
         action: this.input.action,
-        action_link: this.input.action_link
+        action_link: this.input.action_link,
+        point_redeem: this.input.point_redeem
       };
       this.axios.post(address + ':3000/add-' + this.campaign_type, postObj, headers)
       .then((response) => {
@@ -182,6 +188,7 @@ export default {
             description: this.input.description,
             action: this.input.action,
             action_link: this.input.action_link,
+            point_redeem: this.input.point_redeem,
             image: this.temp_image
           };
           this.axios.post(address + ':3000/edit-' + this.campaign_type, postObj, headers)

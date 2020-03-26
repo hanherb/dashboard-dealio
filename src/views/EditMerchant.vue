@@ -15,8 +15,8 @@
                     </d-col>
 
                     <d-col md="6" class="form-group">
-                      <label>Search Name</label>
-                      <d-input type="text" v-model="input.search_name" />
+                      <label>Category</label>
+                      <d-input type="text" v-model="input.category_id" />
                     </d-col>
                   </d-form-row>
                 </d-col>
@@ -45,7 +45,7 @@ export default {
     return {
       input: {
         name: "",
-        search_name: "",
+        category_id: "",
       }
     };
   },
@@ -60,14 +60,14 @@ export default {
       var id = this.$route.params.id;
       this.axios.get(address + ":3000/get-one-merchant", {params: {id: id}, headers: headers.headers}).then((response) => {
         this.input.name = response.data[0].name;
-        this.input.search_name = response.data[0].search_name;
+        this.input.category_id = response.data[0].category_id;
       });
     },
     editMerchant() {
       let postObj = {
         id: this.$route.params.id,
         name: this.input.name,
-        search_name: this.input.search_name,
+        category_id: this.input.category_id,
       };
       this.axios.post(address + ':3000/edit-merchant', postObj, headers)
       .then((response) => {

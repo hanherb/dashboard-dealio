@@ -1,8 +1,10 @@
 [
-	"Survey",
-	"Upload Receipt",
-	"Refer Friend",
-	"Watch Video",
-	"Click Through URL",
-	"Install"
+	"Install",
+	"Click through url",
+ 	"Upload receipt",
+ 	"Watch video",
+ 	"Visit web",
+ 	"Survey",
+ 	"Ref code",
+ 	"Take photo/video"
 ]

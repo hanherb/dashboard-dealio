@@ -4,7 +4,7 @@ z<template>
     <d-row no-gutters class="page-header py-4">
       <!-- Page Header - Page Title -->
       <d-col col sm="4" class="text-center text-sm-left mb-4 mb-sm-0">
-        <span class="text-uppercase page-subtitle">Merchant</span>
+        <span class="text-uppercase page-subtitle">Vendor</span>
         <h3 class="page-title">Merchant List</h3>
       </d-col>
       <d-col col sm="8" class="text-center text-sm-right mb-4 mb-sm-0">
@@ -56,8 +56,8 @@ export default {
           field: 'name',
         },
         {
-          label: 'Search Name',
-          field: 'search_name',
+          label: 'Category',
+          field: 'category_id',
         },
         {
           label: '',
