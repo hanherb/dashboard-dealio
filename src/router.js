@@ -105,17 +105,92 @@ export default new Router({
     {
       path: '/product-deals',
       name: 'product-deals',
-      component: () => import('./views/ProductDeals.vue'),
+      component: () => import('./views/Campaign.vue'),
     },
     {
       path: '/add-product-deals',
       name: 'add-product-deals',
-      component: () => import('./views/AddProductDeals.vue'),
+      component: () => import('./views/AddCampaign.vue'),
     },
     {
       path: '/edit-product-deals/:id',
       name: 'edit-product-deals',
-      component: () => import('./views/EditProductDeals.vue'),
+      component: () => import('./views/EditCampaign.vue'),
+    },
+    {
+      path: '/audience',
+      name: 'audience',
+      component: () => import('./views/Audience.vue'),
+    },
+    {
+      path: '/add-audience',
+      name: 'add-audience',
+      component: () => import('./views/AddAudience.vue'),
+    },
+    {
+      path: '/edit-audience/:id',
+      name: 'edit-audience',
+      component: () => import('./views/EditAudience.vue'),
+    },
+    {
+      path: '/news',
+      name: 'news',
+      component: () => import('./views/Entertainment.vue'),
+    },
+    {
+      path: '/add-news',
+      name: 'add-news',
+      component: () => import('./views/AddEntertainment.vue'),
+    },
+    {
+      path: '/edit-news/:id',
+      name: 'edit-news',
+      component: () => import('./views/EditEntertainment.vue'),
+    },
+    {
+      path: '/stream',
+      name: 'stream',
+      component: () => import('./views/Entertainment.vue'),
+    },
+    {
+      path: '/add-stream',
+      name: 'add-stream',
+      component: () => import('./views/AddEntertainment.vue'),
+    },
+    {
+      path: '/edit-stream/:id',
+      name: 'edit-stream',
+      component: () => import('./views/EditEntertainment.vue'),
+    },
+    {
+      path: '/event',
+      name: 'event',
+      component: () => import('./views/Entertainment.vue'),
+    },
+    {
+      path: '/add-event',
+      name: 'add-event',
+      component: () => import('./views/AddEntertainment.vue'),
+    },
+    {
+      path: '/edit-event/:id',
+      name: 'edit-event',
+      component: () => import('./views/EditEntertainment.vue'),
+    },
+    {
+      path: '/horoscope',
+      name: 'horoscope',
+      component: () => import('./views/Entertainment.vue'),
+    },
+    {
+      path: '/add-horoscope',
+      name: 'add-horoscope',
+      component: () => import('./views/AddEntertainment.vue'),
+    },
+    {
+      path: '/edit-horoscope/:id',
+      name: 'edit-horoscope',
+      component: () => import('./views/EditEntertainment.vue'),
     },
     {
       path: '/ecommerce',

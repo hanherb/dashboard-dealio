@@ -4,13 +4,13 @@ z<template>
     <d-row no-gutters class="page-header py-4">
       <!-- Page Header - Page Title -->
       <d-col col sm="4" class="text-center text-sm-left mb-4 mb-sm-0">
-        <span class="text-uppercase page-subtitle">Campaign</span>
-        <h3 class="page-title">{{campaign_name}}</h3>
+        <span class="text-uppercase page-subtitle">Audience</span>
+        <h3 class="page-title">Audience List</h3>
       </d-col>
       <d-col col sm="8" class="text-center text-sm-right mb-4 mb-sm-0">
-        <d-link :to="'/add-' + campaign_type">
+        <d-link to="/add-audience">
           <d-button class="btn-blue" v-d-tooltip.hover="'Edit'">
-            Add {{campaign_name}}
+            Add Audience
           </d-button>
         </d-link>
       </d-col>
@@ -27,7 +27,7 @@ z<template>
       }">
       <template slot="table-row" slot-scope="props">
         <span v-if="props.column.field == 'update'">
-          <d-link :to="'/edit-' + campaign_type + '/' + props.row.id">
+          <d-link :to="'/edit-audience/' + props.row.id">
             <d-button class="btn-white" v-d-tooltip.hover="'Edit'">
               <i class="material-icons">&#xE254;</i>
             </d-button>
@@ -46,8 +46,6 @@ import headers from '@/headers';
 export default {
   data() {
     return {
-      campaign_type: "",
-      audience: [],
       columns: [
         {
           label: 'ID',
@@ -58,16 +56,20 @@ export default {
           field: 'name',
         },
         {
-          label: 'Audience',
-          field: 'audience',
+          label: 'City',
+          field: 'city',
         },
         {
-          label: 'Start Date',
-          field: 'start_date',
+          label: 'Gender',
+          field: 'gender',
         },
         {
-          label: 'End Date',
-          field: 'end_date',
+          label: 'Age Start',
+          field: 'age_start',
+        },
+        {
+          label: 'Age End',
+          field: 'age_end',
         },
         {
           label: '',
@@ -81,36 +83,13 @@ export default {
 
   created: function()
   {
-    this.campaign_type = this.$route.name;
-    this.campaign_name = this.campaign_type.charAt(0).toUpperCase() + this.campaign_type.slice(1);
-    if(this.campaign_name == 'Product-deals') {
-      this.campaign_name = 'E-Commerce Deals';
-    }
-    else if(this.campaign_name == 'Deals') {
-      this.campaign_name = 'Merchant Deals';
-    }
     this.fetchAudience();
-    this.fetchCampaign();
   },
 
   methods: {
     fetchAudience() {
       this.axios.get(address + ":3000/get-audience", headers).then((response) => {
-        for(var i = 0; i < response.data.length; i++) {
-          this.audience.push(response.data[i]);
-        }
-      });
-    },
-    fetchCampaign() {
-      this.axios.get(address + ":3000/get-" + this.campaign_type, headers).then((response) => {
-        for(var i = 0; i < response.data.length; i++) {
-          for(var j = 0; j < this.audience.length; j++) {
-            if(response.data[i].audience_id == this.audience[j].id) {
-              response.data[i].audience = this.audience[j].name
-              this.rows.push(response.data[i]);
-            }
-          }
-        }
+        this.rows = response.data;
       });
     }
   },

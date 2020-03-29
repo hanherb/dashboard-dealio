@@ -20,6 +20,21 @@
                     </d-col>
                   </d-form-row>
                 </d-col>
+                <d-col lg="4">
+                  <!-- Vendor Image -->
+                  <div>
+                    <label class="text-center w-100 mb-4">Vendor Image</label>
+                    <div class="edit-user-details__avatar m-auto">
+                      <img class="img-responsive" :src="getImage(image)" >
+                      <label class="edit-user-details__avatar__change">
+                                  <i class="material-icons mr-1">&#xE439;</i>
+                                  <input @change="onFileChange" type="file" name="image" class="form-control" />
+                                </label>
+                    </div>
+                    <d-button size="sm" class="btn-white d-table mx-auto mt-4"><i class="material-icons">&#xE2C3;</i> Upload Image</d-button>
+                    <br>
+                  </div>
+                </d-col>
               </d-form-row>
             </d-form>
           </d-card-body>
@@ -43,9 +58,11 @@ import headers from '@/headers';
 export default {
   data() {
     return {
+      temp_image: "",
       input: {
         name: "",
         category_id: "",
+        image: "",
       }
     };
   },
@@ -59,15 +76,50 @@ export default {
     addMerchant() {
       let postObj = {
         name: this.input.name,
-        category_id: this.input.category_id
+        category_id: this.input.category_id,
+        image: this.input.image
       };
       this.axios.post(address + ':3000/add-merchant', postObj, headers)
       .then((response) => {
         if(response.status == 200) {
-          this.$router.push('/merchant');
+          this.postImage(response.data.insertId);
         }
       });
-    }
+    },
+    getImage(image) {
+       return address + ':3000/images/undefined.png';
+    },
+    onFileChange(event) {
+      this.temp_image = event.target.files[0];
+    },
+    postImage(id) {
+      let formData = new FormData();
+      if(this.temp_image.length != 0) {
+        formData.append('merchant', this.temp_image, 'merchant_' + id);
+      }
+      this.axios.post(address + ':3000/post-merchant-image', formData, headers)
+      .then((response) => {
+        if(response.data != 404) {
+          this.input.image = response.data.originalname + '.png';
+          let postObj = {
+            id: id,
+            name: this.input.name,
+            category_id: this.input.category_id,
+            image: this.input.image
+          };
+          this.axios.post(address + ':3000/edit-merchant', postObj, headers)
+          .then((response) => {
+            if(response.status == 200) {
+              console.log(response);
+            }
+          });
+        }
+        else {
+          console.log("No picture uploaded");
+        }
+        this.$router.push('/merchant');
+      });
+    },
   }
 };
 </script>

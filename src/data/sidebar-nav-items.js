@@ -38,6 +38,39 @@ export default function () {
       to: {
         name: 'win',
       },
+    }, {
+      title: 'Audience',
+      htmlBefore: '<i class="material-icons">&#xE889;</i>',
+      to: {
+        name: 'audience',
+      },
+    }],
+  }, {
+    title: 'Entertainment',
+    items: [{
+      title: 'News',
+      htmlBefore: '<i class="material-icons">&#xE889;</i>',
+      to: {
+        name: 'news',
+      },
+    }, {
+      title: 'Stream',
+      htmlBefore: '<i class="material-icons">&#xE889;</i>',
+      to: {
+        name: 'stream',
+      },
+    }, {
+      title: 'Event',
+      htmlBefore: '<i class="material-icons">&#xE889;</i>',
+      to: {
+        name: 'event',
+      },
+    }, {
+      title: 'Horoscope',
+      htmlBefore: '<i class="material-icons">&#xE889;</i>',
+      to: {
+        name: 'horoscope',
+      },
     }],
   }];
 }

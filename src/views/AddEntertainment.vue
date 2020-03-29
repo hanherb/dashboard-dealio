@@ -10,32 +10,23 @@
                   <d-form-row>
 
                     <d-col md="6" class="form-group">
-                      <label>Name</label>
-                      <d-input type="text" id="name" v-model="input.name" />
+                      <label>Title</label>
+                      <d-input type="text" id="title" v-model="input.title" />
                     </d-col>
 
-                    <d-col v-if="campaign_type != 'win'" md="6" class="form-group">
-                      <label>Vendor</label>
-                      <d-form-select v-model="input.merchant_id">
-                        <option v-for="m in merchant" :value="m.id">
-                          {{m.name}}
-                        </option>
-                      </d-form-select>
+                    <d-col v-if="entertainment_type == 'news'" md="6" class="form-group">
+                      <label>Source</label>
+                      <d-input type="text" id="source" v-model="input.source" />
                     </d-col>
 
-                    <d-col v-else md="6" class="form-group">
-                      <label>Point Redeem</label>
-                      <d-input type="number" id="point_redeem" v-model="input.point_redeem" />
+                    <d-col v-if="entertainment_type == 'stream'" md="6" class="form-group">
+                      <label>Video URL</label>
+                      <d-input type="text" id="video_url" v-model="input.video_url" />
                     </d-col>
 
-                    <d-col v-if="campaign_type == 'product-deals'" md="6" class="form-group">
-                      <label>Price</label>
-                      <d-input type="number" v-model="input.price" />
-                    </d-col>
-
-                    <d-col v-if="campaign_type == 'product-deals'" md="6" class="form-group">
-                      <label>Discount</label>
-                      <d-input type="number" v-model="input.discount" />
+                    <d-col v-if="entertainment_type == 'horoscope'" md="6" class="form-group">
+                      <label>Zodiac Sign</label>
+                      <d-form-select v-model="input.zodiac_sign" :options="zodiacOptions" />
                     </d-col>
 
                     <d-col md="6" class="form-group">
@@ -58,37 +49,18 @@
                         typeable />
                     </d-col>
 
-                    <d-col md="6" class="form-group">
-                      <label>Audience</label>
-                      <d-form-select v-model="input.audience_id">
-                        <option v-for="a in audience" :value="a.id">
-                          {{a.name}}
-                        </option>
-                      </d-form-select>
-                    </d-col>
-
-                    <d-col md="8" class="form-group">
-                      <label>Description</label>
-                      <textarea v-model="input.description"
+                    <d-col v-if="entertainment_type != 'stream'" md="8" class="form-group">
+                      
+                      <!-- <textarea v-model="input.description"
                         rows="6" wrap="soft" class="form-control form-control-lg">
-                      </textarea>
-                    </d-col>
-
-                    <d-col v-if="campaign_type != 'win' && campaign_type != 'product-deals'" md="6" class="form-group">
-                      <label>Action</label>
-                      <d-form-select v-model="input.action" :options="actionOptions" />
-                    </d-col>
-
-                    <d-col v-if="campaign_type != 'win' && campaign_type != 'product-deals'" md="6" class="form-group">
-                      <label>Action Link</label>
-                      <d-input type="text" v-model="input.action_link" />
+                      </textarea> -->
                     </d-col>
                   </d-form-row>
                 </d-col>
 
                 <d-col lg="4">
                   <!-- Square Image -->
-                  <div v-if="campaign_type == 'deals' || campaign_type == 'product-deals'">
+                  <div>
                     <label class="text-center w-100 mb-4">Square Image</label>
                     <div class="edit-user-details__avatar m-auto">
                       <img class="img-responsive" :src="getImage(image)" >
@@ -113,13 +85,16 @@
                     <d-button size="sm" class="btn-white d-table mx-auto mt-4"><i class="material-icons">&#xE2C3;</i> Upload Image</d-button>
                   </div>
                 </d-col>
-
+                <d-col lg="12" v-if="entertainment_type != 'stream'">
+                  <label>Description</label>
+                  <quill-editor ref="quill"></quill-editor>
+                </d-col>
               </d-form-row>
             </d-form>
           </d-card-body>
           <!-- Save Changes -->
           <d-card-footer class="border-top">
-            <d-button size="sm" @click="addCampaign" class="btn-accent ml-auto d-table mr-3">
+            <d-button size="sm" @click="addEntertainment" class="btn-accent ml-auto d-table mr-3">
               Submit
             </d-button>
           </d-card-footer>
@@ -133,58 +108,43 @@
 <script>
 import address from '@/address';
 import headers from '@/headers';
-import action from '@/data/action.json';
+import zodiac from '@/data/zodiac.json';
+
+import Editor from '@/components/add-new-post/Editor.vue';
+
+import 'quill/dist/quill.snow.css';
 
 export default {
+  components: {
+    quillEditor: Editor,
+  },
   data() {
     return {
-      actionOptions: action,
-      campaign_type: "",
-      campaign_name: "",
+      zodiacOptions: zodiac,
+      entertainment_type: "",
       temp_image: "",
       temp_banner: "",
-      audience: [],
-      merchant: [],
       input: {
-        name: "",
-        merchant_id: 0,
+        title: "",
         start_date: "",
         end_date: "",
-        price: 0,
-        discount: 0,
-        audience_id: "",
+        source: "",
+        video_url: "",
+        zodiac_sign: "",
         description: "",
-        action: "",
-        action_link: "",
-        point_redeem: 0,
-        image: ""
+        image: "",
+        banner: ""
       }
     };
   },
 
   created: function()
   {
-    this.campaign_type = this.$route.name.split("add-")[1];
-    this.fetchAudience();
-    this.fetchMerchant();
+    this.entertainment_type = this.$route.name.split("add-")[1];
   },
 
   methods: {
-    fetchAudience() {
-      this.axios.get(address + ":3000/get-audience", headers).then((response) => {
-        for(var i = 0; i < response.data.length; i++) {
-          this.audience.push(response.data[i]);
-        }
-      });
-    },
-    fetchMerchant() {
-      this.axios.get(address + ":3000/get-merchant", headers).then((response) => {
-        for(var i = 0; i < response.data.length; i++) {
-          this.merchant.push(response.data[i]);
-        }
-      });
-    },
-    addCampaign() {
+    addEntertainment() {
       let currentdate = new Date();
       let day = currentdate.getDate();
       let month = currentdate.getMonth()+1;
@@ -196,22 +156,20 @@ export default {
       let dateformat = year + '-' + month + '-' + day;
       let timeformat = hour + ':' + minute + ':' + second;
 
+      this.input.description = JSON.stringify(this.$refs.quill.addQuill().ops);
+
       let postObj = {
-        name: this.input.name,
-        merchant_id: this.input.merchant_id,
+        title: this.input.title,
         start_date: this.input.start_date,
         end_date: this.input.end_date,
-        price: this.input.price,
-        discount: this.input.discount,
-        audience_id: this.input.audience_id,
+        source: this.input.source,
+        video_url: this.input.video_url,
+        zodiac_sign: this.input.zodiac_sign,
         description: this.input.description,
-        action: this.input.action,
-        action_link: this.input.action_link,
-        point_redeem: this.input.point_redeem,
         date: dateformat,
         time: timeformat
       };
-      this.axios.post(address + ':3000/add-' + this.campaign_type, postObj, headers)
+      this.axios.post(address + ':3000/add-' + this.entertainment_type, postObj, headers)
       .then((response) => {
         if(response.status == 200) {
           this.postImage(response.data.insertId);
@@ -230,11 +188,11 @@ export default {
     postImage(id) {
       let formData = new FormData();
       if(this.temp_image.length != 0) {
-        formData.append('image', this.temp_image, 'campaign_' + this.campaign_type + "_" + id);
+        formData.append('image', this.temp_image, 'entertainment_' + this.entertainment_type + "_" + id);
       }
       let formData2 = new FormData();
       if(this.temp_banner.length != 0) {
-        formData2.append('banner', this.temp_banner, 'campaign_banner_' + this.campaign_type + "_" + id);
+        formData2.append('banner', this.temp_banner, 'entertainment_banner_' + this.entertainment_type + "_" + id);
       }
       this.axios.post(address + ':3000/post-image', formData, headers)
       .then((response) => {
@@ -242,21 +200,17 @@ export default {
           this.input.image = response.data.originalname + '.png';
           let postObj = {
             id: id,
-            name: this.input.name,
-            merchant_id: this.input.merchant_id,
+            title: this.input.title,
             start_date: this.input.start_date,
             end_date: this.input.end_date,
-            price: this.input.price,
-            discount: this.input.discount,
-            audience_id: this.input.audience_id,
+            source: this.input.source,
+            video_url: this.input.video_url,
+            zodiac_sign: this.input.zodiac_sign,
             description: this.input.description,
-            action: this.input.action,
-            action_link: this.input.action_link,
-            point_redeem: this.input.point_redeem,
             image: this.input.image,
-            banner: this.input.banner
+            banner: this.input.banner,
           };
-          this.axios.post(address + ':3000/edit-' + this.campaign_type, postObj, headers)
+          this.axios.post(address + ':3000/edit-' + this.entertainment_type, postObj, headers)
           .then((response) => {
             if(response.status == 200) {
               console.log(response);
@@ -272,21 +226,17 @@ export default {
             this.input.banner = response.data.originalname + '.png';
             let postObj = {
               id: id,
-              name: this.input.name,
-              merchant_id: this.input.merchant_id,
+              title: this.input.title,
               start_date: this.input.start_date,
               end_date: this.input.end_date,
-              price: this.input.price,
-              discount: this.input.discount,
-              audience_id: this.input.audience_id,
+              source: this.input.source,
+              video_url: this.input.video_url,
+              zodiac_sign: this.input.zodiac_sign,
               description: this.input.description,
-              action: this.input.action,
-              action_link: this.input.action_link,
-              point_redeem: this.input.point_redeem,
               image: this.input.image,
               banner: this.input.banner,
             };
-            this.axios.post(address + ':3000/edit-' + this.campaign_type, postObj, headers)
+            this.axios.post(address + ':3000/edit-' + this.entertainment_type, postObj, headers)
             .then((response) => {
               if(response.status == 200) {
                 console.log(response);
@@ -296,7 +246,7 @@ export default {
           else {
             console.log("No banner uploaded");
           }
-          this.$router.push('/' + this.campaign_type);
+          this.$router.push('/' + this.entertainment_type);
         });
       });
     },

@@ -2,7 +2,6 @@
   <d-card class="card-small mb-3">
     <d-card-body>
       <d-form class="add-new-post">
-        <d-input size="lg" class="mb-3" placeholder="Your Post Title" />
         <div ref="editor" class="add-new-post__editor mb-1"></div>
       </d-form>
     </d-card-body>
@@ -14,6 +13,11 @@ import Quill from 'quill';
 
 export default {
   name: 'editor',
+  data() {
+    return {
+      quill: "",
+    }
+  },
   mounted() {
     const toolbarOptions = [
       [{ header: [1, 2, 3, 4, 5, false] }],
@@ -26,7 +30,7 @@ export default {
     ];
 
     // Init the Quill RTE
-    new Quill(this.$refs.editor, {
+    this.quill = new Quill(this.$refs.editor, {
       modules: {
         toolbar: toolbarOptions,
       },
@@ -34,6 +38,12 @@ export default {
       theme: 'snow',
     });
   },
+  methods: {
+    addQuill() {
+      var delta = this.quill.getContents();
+      return delta;
+    }
+  }
 };
 </script>
 
