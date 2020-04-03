@@ -193,6 +193,26 @@ export default new Router({
       component: () => import('./views/EditEntertainment.vue'),
     },
     {
+      path: '/user-login',
+      name: 'user-login',
+      component: () => import('./views/UserLogin.vue'),
+    },
+    {
+      path: '/user-register-phone/:method',
+      name: 'user-register-phone',
+      component: () => import('./views/UserRegisterPhone.vue'),
+    },
+    {
+      path: '/user-register-otp/:method/:id',
+      name: 'user-register-otp',
+      component: () => import('./views/UserRegisterOtp.vue'),
+    },
+    {
+      path: '/user-register/:method/:id',
+      name: 'user-register',
+      component: () => import('./views/UserRegister.vue'),
+    },
+    {
       path: '/ecommerce',
       name: 'ecommerce',
       component: OnlineStore,
